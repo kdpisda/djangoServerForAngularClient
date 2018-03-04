@@ -1,0 +1,13 @@
+cffi==1.11.4
+cryptography==1.7.2
+Django==2.0.1
+django-material==1.1.1
+djangorestframework==3.7.7
+idna==2.6
+jwt==0.5.2
+Pillow==5.0.0
+pkg-resources==0.0.0
+pyasn1==0.4.2
+pycparser==2.18
+pytz==2017.3
+six==1.11.0
