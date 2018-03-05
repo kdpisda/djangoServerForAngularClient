@@ -16,7 +16,7 @@ class Profile(models.Model):
 		(ALUMNI, 'Alumni'),
 	)
 	profile_type = models.CharField(
-		max_length=2,
+		max_length=3,
 		choices=PROFILE_TYPE,
 		default=STUDENT,
 	)
@@ -24,6 +24,10 @@ class Profile(models.Model):
 	bio = models.TextField(max_length=500, blank=True)
 	location = models.CharField(max_length=30, blank=True)
 	birth_date = models.DateField(null=True, blank=True)
+	avatar = models.ImageField(upload_to='static/uploads/avatar', null=True, blank=True)
+	status = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 	def __str__(self):
 		return str(self.user.first_name + " " + self.user.last_name)
 
