@@ -8,14 +8,12 @@ from django.shortcuts import render
 
 def controller_api(function):
 	def wrap(request, *args, **kwargs):
-		response = {}
 		try:
 			return function(request, *args, **kwargs)
-		except Exception as e:
-			print (e)
+		except:
+			response = {}
 			response['success'] = False
-			response['message'] = str(e)
-			response['response_code'] = RESPONSE_CODE["internal_server_error"]
+			response['message'] = "Sorry an error occured please try again"
 			return JsonResponse(response)
 	wrap.__doc__ = function.__doc__
 	wrap.__name__ = function.__name__
