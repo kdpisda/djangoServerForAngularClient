@@ -6,12 +6,16 @@ from django.dispatch import receiver
 # Profile model
 class Profile(models.Model):
 	STUDENT = 'STU'
-	FACULTY = 'FAC'
+	HOD = 'HOD'
+	ASSISTANT = 'AST'
+	TEMPORARY = 'TMP'
 	STAFF = 'STF'
 	ALUMNI = 'ALU'
 	PROFILE_TYPE = (
 		(STUDENT, 'Student'),
-		(FACULTY, 'Faculty'),
+		(HOD, 'HOD'),
+		(ASSISTANT, 'Assistant Professor'),
+		(TEMPORARY, 'Temporary Faculty'),
 		(STAFF, 'Staff'),
 		(ALUMNI, 'Alumni'),
 	)

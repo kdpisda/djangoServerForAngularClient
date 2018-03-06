@@ -86,7 +86,7 @@ class Announcement(models.Model):
 	date = models.DateField()
 	title = models.TextField(max_length=32)
 	description = models.TextField(max_length=256)
-	meta = models.ImageField(upload_to='static/uploads/announcementes', null=True, blank=True)
+	meta = models.ImageField(upload_to='static/uploads/announcements', null=True, blank=True)
 	link = models.TextField(max_length=32)
 	status = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)

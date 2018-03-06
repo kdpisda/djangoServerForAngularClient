@@ -8,7 +8,9 @@ from decorators import controller_api
 def switch_profile_type(arguement):
 	switcher = {
 		"STUDENTS" : "STU",
-		"FACULTIES" : "FAC",
+		"HOD" : "HOD",
+		"ASSISTANT" : "AST",
+		"TEMPORARY" : "TMP",
 		"STAFF" : "STF",
 		"ALUMNIES" : "ALU"
 	}
@@ -16,6 +18,11 @@ def switch_profile_type(arguement):
 
 @controller_api
 def profile(request, profile_type):
+	if request.is_secure():
+		protocol = 'https'
+	else:
+		protocol = 'http'
+	host = protocol + "://" + request.META['HTTP_HOST']
 	req_profile_type = switch_profile_type(profile_type.upper())
 	response = {}
 	if type(req_profile_type) == str:
@@ -27,7 +34,7 @@ def profile(request, profile_type):
 				req_profile['name'] = str(temp_profile.user.first_name + " " + temp_profile.user.last_name)
 				req_profile['email'] = temp_profile.user.email
 				req_profile['bio'] = temp_profile.bio
-				req_profile['avatar'] = str(temp_profile.avatar)
+				req_profile['avatar'] = host + "/" + str(temp_profile.avatar)
 				req_profiles.append(req_profile)
 				req_profile = {}
 			response['success'] = True
@@ -57,7 +64,7 @@ def achievements(request):
 			req_achievement['user']['user_type'] = temp_achievement.profile.profile_type
 			req_achievement['description'] = temp_achievement.description
 			req_achievement['meta'] = str(temp_achievement.meta)
-			req_achievement['date'] = temp_achievement.date
+			req_achievement['date'] = str(str(temp_achievement.date.day) + " " + temp_achievement.date.strftime('%B') + " " + str(temp_achievement.date.year))
 			req_achievements.append(req_achievement)
 			req_achievement = {}
 		response['data'] = req_achievements
@@ -105,7 +112,7 @@ def activities(request):
 		req_activity = {}
 		for temp_activity in temp_activities:
 			req_activity['title'] = temp_activity.title
-			req_activity['date'] = temp_activity.date
+			req_activity['date'] = str(str(temp_activity.date.day) + " " + temp_activity.date.strftime('%B') + " " + str(temp_activity.date.year))
 			req_activity['description'] = temp_activity.description
 			req_activity['link'] = temp_activity.link
 			req_activities.append(req_activity)
@@ -118,20 +125,113 @@ def activities(request):
 
 @controller_api
 def team(request):
+	if request.is_secure():
+		protocol = 'https'
+	else:
+		protocol = 'http'
+	host = protocol + "://" + request.META['HTTP_HOST']
 	response = {}
 	if Team.objects.filter(status=True).exists():
 		response['success'] = True
-		temp_team_members = Team.objects.filter(status=True)
 		req_team_members = []
 		req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='CON')
 		for temp_team_member in temp_team_members:
 			req_team_member['user'] = {}
 			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
 			req_team_member['user']['email'] = temp_team_member.profile.user.email
-			req_team_member['user']['avatar'] = str(temp_team_member.profile.avatar)
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
 			req_team_member['user']['bio'] = temp_team_member.profile.bio
 			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
-			req_team_member['position'] = temp_team_member.position
+			req_team_member['position'] = "Convener"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='COC')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Co-Convener"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='TRE')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Treaserer"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='TEC')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Tech Team"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='WEB')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Web Team"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='DSG')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Design Team"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='RND')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Research and Development Team"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='DOC')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Documentation Team"
+			req_team_members.append(req_team_member)
+			req_team_member = {}
+		temp_team_members = Team.objects.filter(status=True, position='EXE')
+		for temp_team_member in temp_team_members:
+			req_team_member['user'] = {}
+			req_team_member['user']['name'] = str(temp_team_member.profile.user.first_name + " " + temp_team_member.profile.user.last_name)
+			req_team_member['user']['email'] = temp_team_member.profile.user.email
+			req_team_member['user']['avatar'] = host + "/" + str(temp_team_member.profile.avatar)
+			req_team_member['user']['bio'] = temp_team_member.profile.bio
+			req_team_member['user']['user_type'] = temp_team_member.profile.profile_type
+			req_team_member['position'] = "Executives"
 			req_team_members.append(req_team_member)
 			req_team_member = {}
 		response['data'] = req_team_members
@@ -142,6 +242,11 @@ def team(request):
 
 @controller_api
 def announcements(request):
+	if request.is_secure():
+		protocol = 'https'
+	else:
+		protocol = 'http'
+	host = protocol + "://" + request.META['HTTP_HOST']
 	response = {}
 	if Announcement.objects.filter(status=True).exists():
 		response['success'] = True
@@ -150,9 +255,10 @@ def announcements(request):
 		req_announcement = {}
 		for temp_announcement in temp_announcements:
 			req_announcement['title'] = temp_announcement.title
-			req_announcement['date'] = temp_announcement.date
+			req_announcement['date'] = str(str(temp_announcement.date.day) + " " + temp_announcement.date.strftime('%B') + " " + str(temp_announcement.date.year))
 			req_announcement['description'] = temp_announcement.description
 			req_announcement['link'] = temp_announcement.link
+			req_announcement['meta'] = host + "/" + str(temp_announcement.meta)
 			req_announcements.append(req_announcement)
 			req_announcement = {}
 		response['data'] = req_announcements
